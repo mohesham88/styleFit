@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     # Third party
     'rest_framework',
     # Apps 
-    'closet',
-    'users',
+    'item',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -79,11 +79,25 @@ WSGI_APPLICATION = 'styleFit.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+from dotenv import load_dotenv
+import os
+from mongoengine import connect
+
+load_dotenv()
+# Load MongoDB URI from the .env file
+DB_URI = os.getenv('DB_URI')
+
+# Connect to MongoDB using MongoEngine
+connect(host=DB_URI)
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # 'default': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'StyleFit',  # Replace with your MongoDB database name
+    #     'CLIENT': {
+    #         'host': os.getenv('DB_URI'),  # MongoDB connection URI
+    #     }
+    # }
 }
 
 
