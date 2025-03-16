@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "cloudinary",
     "cloudinary_storage",
-    # "mongoengine.django.mongo_auth"
     # Apps
     "item",
     "user",
@@ -92,20 +91,8 @@ DB_URI = os.getenv("DB_URI")
 # Connect to MongoDB using MongoEngine
 connect(host=DB_URI)
 
-# SESSION_ENGINE = "mongoengine.django.sessions"
-# AUTH_USER_MODEL = "mongo_auth.MongoUser"
-# MONGOENGINE_USER_DOCUMENT = "backend.user.models.Profile"
-
-# AUTHENTICATION_BACKENDS = ("mongoengine.django.auth.MongoEngineBackend",)
-
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'StyleFit',  # Replace with your MongoDB database name
-    #     'CLIENT': {
-    #         'host': os.getenv('DB_URI'),  # MongoDB connection URI
-    #     }
-    # }
+
 }
 
 
