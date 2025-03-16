@@ -8,3 +8,6 @@ pymongo==4.11.2
 python-dotenv==1.0.1
 pytz==2025.1
 sqlparse==0.5.3
+google-genai==1.5.0
+cloudinary==1.42.2
+django-cloudinary-storage==0.3.0

@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     # Third party
     'rest_framework',
+    'cloudinary',
+    'cloudinary_storage',
     # Apps 
     'item',
     'user',
@@ -99,6 +101,18 @@ DATABASES = {
     #     }
     # }
 }
+
+
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+cloudinary.config(
+  	cloudinary=os.getenv('CLOUDINARY_URL'),
+)
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
 
 
 # Password validation
