@@ -95,6 +95,16 @@ DATABASES = {
 
 }
 
+AUTHENTICATION_BACKENDS = [
+    "user.backends.MongoEngineBackend",
+]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "user.authentication.JWTAuthentication",  # Use our custom JWT auth
+    ],
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
