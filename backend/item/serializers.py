@@ -3,15 +3,20 @@ from .models import Item
 import cloudinary.uploader
 from rest_framework import serializers
 from .models import Item
+import jwt
+from django.conf import settings
 
 
 class ItemSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)
-    user = serializers.CharField(source="user.id", read_only=True)
     image_url = serializers.CharField(read_only=True)  # Store Cloudinary URL
     image = serializers.ImageField(write_only=True)  # Only accept image input
 
     def create(self, validated_data):
+        token = self.context['request'].headers['Authorization'].split()[1]
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        user_id = payload.get("id")
+
         image = validated_data.pop("image")
 
         # Upload image to Cloudinary
