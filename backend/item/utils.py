@@ -17,33 +17,32 @@ Generate a JSON object representing a clothing item with the following structure
 
 ### **JSON Structure:**  
 ```json
-{
-    "Id": "<Unique identifier>",  
-    "category": "<One of the predefined category enums>",  
-    "Color": "<A relevant color based on common clothing colors>",  
-    "Season": "<One of the predefined season enums>",  
-    "Type": "<One of the predefined type enums>",  
+{ 
+    "category": "accessory | top | bottom | dress | footwear | outerwear | shoes | accessories | bags | jewelry | hats | scarves | belts | socks | underwear | swimwear | activewear | sleepwear | other",  
+    "color": "<A relevant color based on common clothing colors>",  
+    "season": "summer | winter | spring | fall | all",  
+    "type": "formal | semi-formal | casual | sports | business | party | beach | other",  
     "pattern": "<A common clothing pattern such as Solid, Striped, Plaid, Floral>",  
     "material": "<A common clothing material such as Cotton, Polyester, Silk, Wool>",  
-    "Description": "<A short, well-written description of the clothing item>",  
-    "Image": "<A valid image URL>"
+    "description": "<A short, well-written description of the clothing item>",  
+    
 }
 ```
 
 ### **Constraints:**  
 1. **Strict Enum Compliance:**  
-   - The values for `"category"`, `"Season"`, and `"Type"` **must strictly** match the predefined enums.  
+   - The values for `"category"`, `"season"`, and `"type"` **must strictly** match the predefined enums.  
    - If the category is missing or unclear, choose from the **CategoryEnum** list.  
    - If the season is missing, default to **"other"** instead of generating a random value.  
    - If the type is missing, default to **"other"**.  
 
 2. **Data Generation Rules:**  
-   - `"Color"`: Must be a valid color name (e.g., "Red", "Blue", "Beige").  
-   - `"pattern"`: Choose from common patterns (e.g., "Solid", "Striped", "Plaid", "Floral", "Printed").  
-   - `"material"`: Choose from standard materials (e.g., "Cotton", "Polyester", "Silk", "Wool", "Linen").  
-   - `"Description"`: Should be **concise** and **descriptive**. Example:  
+   - `"color"`: Must be a valid color name (e.g., "red", "blue", "beige").  
+   - `"pattern"`: Choose from common patterns (e.g., "solid", "striped", "plaid", "floral", "printed").  
+   - `"material"`: Choose from standard materials (e.g., "cotton", "polyester", "silk", "wool", "linen").  
+   - `"description"`: Should be **concise** and **descriptive**. Example:  
      - *"A lightweight cotton summer dress with a floral pattern, perfect for warm days."*  
-   - `"Image"`: Should be a **valid** image URL in `"https://example.com/image.jpg"` format.  
+    
 
 3. **Output Format:**  
    - **Return the response as a JSON object only, with no additional text or explanation.**  
@@ -52,28 +51,26 @@ Generate a JSON object representing a clothing item with the following structure
 ### **Example Output:**  
 ```json
 {
-    "Id": "abc123",
     "category": "dress",
-    "Color": "Blue",
-    "Season": "summer",
-    "Type": "casual",
-    "pattern": "Floral",
-    "material": "Cotton",
-    "Description": "A lightweight cotton summer dress with a floral pattern, perfect for warm days.",
-    "Image": "https://example.com/dress.jpg"
+    "color": "blue",
+    "season": "summer",
+    "type": "casual",
+    "pattern": "floral",
+    "material": "cotton",
+    "description": "A lightweight cotton summer dress with a floral pattern, perfect for warm days.",
 }
 ```
 ```
 """
 
 
-def get_genai_response(image, image_url, user_id):
+def get_genai_response(image):
     # Send to Gemini API
     client = genai.Client(api_key=genai_key)
-    prompt = PROMPT + f"\nHere is IMAGE_URL {image_url}\n"
-    prompt += f"\nHere is the ID for the JSON Object {user_id}\n"
+    # prompt = PROMPT + f"\nHere is IMAGE_URL {image_url}\n"
+    # prompt += f"\nHere is the ID for the JSON Object {user_id}\n"
     response = client.models.generate_content(
-        model="gemini-2.0-flash", contents=[image, prompt]
+        model="gemini-2.0-flash", contents=[image, PROMPT]
     )
 
     return response
@@ -102,16 +99,21 @@ def generate_item_schema(response_text):
         return None
 
 
-def convert_uploadedfile_to_pil(uploaded_file):
+def convert_uploaded_file_to_pil(uploaded_file):
     image = Image.open(uploaded_file)
     return image
 
 
-def item_generator(image, image_url, user_id):
-    image_url = "https://res.cloudinary.com/dyulsrqq6/image/upload/v1742127980/l5zngyliewelflpdwcxw.webp"
-    image = download_image(image_url)
-    response = get_genai_response(image=image, image_url=image_url, user_id=user_id)
-    print(response.text)
+def item_generator(uploaded_img, image_url, user_id):
+
+    image = convert_uploaded_file_to_pil(uploaded_img)
+
+    response = get_genai_response(image=image)
+    newItem = generate_item_schema(response.text)
+    newItem["image"] = image_url
+    newItem["user"] = user_id
+
+    return newItem
 
 
 if __name__ == "__main__":

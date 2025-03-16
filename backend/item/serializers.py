@@ -6,6 +6,8 @@ from .models import Item
 import jwt
 from django.conf import settings
 
+from .utils import item_generator
+
 
 class ItemSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)
@@ -23,9 +25,12 @@ class ItemSerializer(serializers.Serializer):
         upload_result = cloudinary.uploader.upload(image)
         image_url = upload_result["secure_url"]
 
-        # Create ClothingItem with default values
-        clothing_item = Item.objects.create(
-            user=self.context["request"].user, image_url=image_url
-        )
+        newItem = item_generator(image, image_url, user_id)
 
+
+        # Create ClothingItem with default values
+        clothing_item = Item(**newItem)
+        clothing_item.save()
+        print(clothing_item)
         return clothing_item
+
