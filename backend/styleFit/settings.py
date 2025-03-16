@@ -103,18 +103,6 @@ DATABASES = {
 }
 
 
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
-cloudinary.config(
-  	cloudinary=os.getenv('CLOUDINARY_URL'),
-)
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
