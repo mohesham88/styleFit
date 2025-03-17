@@ -10,11 +10,11 @@ class Item(Document):
     category = EnumField(CategoryEnum, required=True)
     color = StringField(required=True)
     season = EnumField(SeasonEnum, required=True)
-    item_type = EnumField(TypeEnum, required=True)
+    type = EnumField(TypeEnum, required=True)
     pattern = StringField(required=True)
     material = StringField(required=True)
     description = StringField()
     image = URLField(required=True)  # Storing image as a URL
 
     def __str__(self):
-        return f"{self.user.name}: {self.category.value} - {self.color} - {self.item_type.value}"
+        return f"{self.user.username}: {self.category.value} - {self.color} - {self.type.value}"
