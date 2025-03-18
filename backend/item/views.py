@@ -38,6 +38,15 @@ class ItemDetailView(drfme_generics.RetrieveAPIView):
     lookup_field = 'id'
     serializer_class = ItemListSerializer
 
+class UserItemsView(drfme_generics.ListAPIView):
+    queryset = Item.objects.all()
+    lookup_field = 'user'
+    serializer_class = UserItemsSerializer
+    def get_queryset(self):
+        # Filter items that belong to the current user
+        return Item.objects.filter(user=self.request.user)
+
+
 
 
 

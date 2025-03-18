@@ -42,3 +42,8 @@ class ItemListSerializer(DocumentSerializer):
     class Meta:
         model = Item
         fields = '__all__'
+
+class UserItemsSerializer(DocumentSerializer):
+    class Meta:
+        model = Item
+        fields = '__all__'
