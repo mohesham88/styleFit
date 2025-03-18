@@ -15,8 +15,15 @@ from .utils import item_generator
 
 class ItemSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)
-    image_url = serializers.CharField(read_only=True)  # Store Cloudinary URL
-    image = serializers.ImageField(write_only=True)  # Only accept image input
+    user = serializers.CharField(source="user.id", read_only=True)  # Serialize user as an ID
+    category = serializers.CharField(source="category.value", read_only=True)
+    color = serializers.CharField(read_only=True)
+    season = serializers.CharField(source="season.value", read_only=True)
+    type = serializers.CharField(source="type.value", read_only=True)
+    pattern = serializers.CharField(read_only=True)
+    material = serializers.CharField(read_only=True)
+    description = serializers.CharField(allow_null=True, required=False)
+    image = serializers.ImageField(write_only=True)  # Use URLField for the image URL
 
     def create(self, validated_data):
         token = self.context['request'].headers['Authorization'].split()[1]
