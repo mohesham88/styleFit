@@ -24,6 +24,8 @@ class JWTAuthentication(BaseAuthentication):
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
             user_id = payload.get("id")
 
+            request.user_id = user_id
+
             # Retrieve user from MongoDB
             user = Profile.objects(id=user_id).first()
             if not user:
