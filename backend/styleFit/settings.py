@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # Apps
     "item",
     "user",
+    "chat",
 ]
 
 MIDDLEWARE = [
@@ -91,9 +92,7 @@ DB_URI = os.getenv("DB_URI")
 # Connect to MongoDB using MongoEngine
 connect(host=DB_URI)
 
-DATABASES = {
-
-}
+DATABASES = {}
 
 AUTHENTICATION_BACKENDS = [
     "user.backends.MongoEngineBackend",
