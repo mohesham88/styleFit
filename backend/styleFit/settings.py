@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "cloudinary",
     "cloudinary_storage",
+    'serpapi',
     # Apps
     "item",
     "user",
