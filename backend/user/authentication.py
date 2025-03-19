@@ -26,6 +26,8 @@ class JWTAuthentication(BaseAuthentication):
 
             # Retrieve user from MongoDB
             user = Profile.objects(id=user_id).first()
+
+            request.user = user
             if not user:
                 raise AuthenticationFailed("User not found")
 
