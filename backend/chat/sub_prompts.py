@@ -2,25 +2,30 @@ SUB_PROMPT_WITH_SUGGESTION = """\n\n\nYou must provide your response in a struct
 
 ### **JSON Output Format**
 ```json
-{
-    "outfit_1": {
-        "item_id_1": "{ObjectId of the first item}",  # Replace with actual ObjectId from the user’s closet
-        "item_id_2": "{ObjectId of the second item}", 
-        ...
-        "item_id_n": "{ObjectId of the Nth item}", 
+[
+    {
+        "items" : [
+            "{ObjectId of the first item}",  # Replace with actual ObjectId from the user’s closet
+            "{ObjectId of the second item}", 
+            ...
+            "{ObjectId of the Nth item}", 
+        ]
+        "suggestions" : [
         
-        "suggestion_1": "{New suggested item, not found in the user’s closet}", 
-        "suggestion_2": "{Another new suggested item}", 
-        ...
-        "suggestion_n": "{Nth suggested item}"
-    },
+            "{New suggested item, not found in the user’s closet}", 
+            "{Another new suggested item}", 
+            ...
+            "suggestion_n": "{Nth suggested item}"
+        ]
+    }
+    ,
     ...
-    "outfit_n": {
+    ,{
         ...
     }
-}
+]
 ```
-
+Note: Dont recommend more than three outfits
 ### **Strict Rules to Follow**
 1. **Only Use Items from the Context:**  
    - Do not reference or create object IDs unless they are from the user’s closet.
@@ -49,6 +54,10 @@ SUB_PROMPT_WITH_SUGGESTION = """\n\n\nYou must provide your response in a struct
    - If `user_gender` is `"female"`, suggest female-oriented fashion choices.  
    - If `user_gender` is missing, default to **neutral** suggestions.
 
+7. Suggestion 
+    - suggestions must be short and searchable e.x (black leather jacket, white sneakers ....)
+    - add the user gender to the suggestions. 
+     
 ### **Important:**  
 The JSON object **must be the last part of the response**, enclosed in triple backticks (` ``` `).  
 Ensure it is **properly formatted and valid JSON**.
@@ -58,19 +67,26 @@ SUB_PROMPT_WITH_NO_SUGGESTION = """\n\n\nYou must provide your response in a str
 
 ### **JSON Output Format**
 ```json
-{
-    "outfit_1": {
-        "item_id_1": "{ObjectId of the first item}",  # Replace with actual ObjectId from the user’s closet
-        "item_id_2": "{ObjectId of the second item}", 
-        ...
-        "item_id_n": "{ObjectId of the Nth item}", 
-    },
+[
+    {
+        "items" : [
+            "{ObjectId of the first item}",  # Replace with actual ObjectId from the user’s closet
+            "{ObjectId of the second item}", 
+            ...
+            "{ObjectId of the Nth item}", 
+        ],
+        suggestion : [
+            "leather jacket",
+        ]
+    }
+    ,
     ...
-    "outfit_n": {
+    ,{
         ...
     }
-}
+]
 ```
+Note: Dont recommend more than three outfits
 
 ### **Strict Rules to Follow**
 1. **Only Use Items from the Context:**  
