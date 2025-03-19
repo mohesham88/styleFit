@@ -15,7 +15,7 @@ from django.conf import settings
 from .utils import item_generator
 
 
-class ItemSerializer(serializers.Serializer):
+class ItemSerializer(DocumentSerializer):
     id = serializers.CharField(read_only=True)
     image_url = serializers.CharField(read_only=True)  # Store Cloudinary URL
     image = serializers.ImageField(write_only=True)  # Only accept image input
