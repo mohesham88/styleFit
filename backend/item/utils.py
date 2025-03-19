@@ -64,13 +64,13 @@ Generate a JSON object representing a clothing item with the following structure
 """
 
 
-def get_genai_response(image):
+def get_genai_response(prompt, context=PROMPT):
     # Send to Gemini API
     client = genai.Client(api_key=genai_key)
     # prompt = PROMPT + f"\nHere is IMAGE_URL {image_url}\n"
     # prompt += f"\nHere is the ID for the JSON Object {user_id}\n"
     response = client.models.generate_content(
-        model="gemini-2.0-flash", contents=[image, PROMPT]
+        model="gemini-2.0-flash", contents=[prompt, context]
     )
 
     return response
@@ -108,7 +108,10 @@ def item_generator(uploaded_img, image_url, user_id):
 
     image = convert_uploaded_file_to_pil(uploaded_img)
 
-    response = get_genai_response(image=image)
+    response = get_genai_response(prompt=image)
+
+    print(response)
+
     newItem = generate_item_schema(response.text)
     newItem["image"] = image_url
     newItem["user"] = user_id

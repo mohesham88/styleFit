@@ -41,9 +41,11 @@ INSTALLED_APPS = [
     "rest_framework",
     "cloudinary",
     "cloudinary_storage",
+    'serpapi',
     # Apps
     "item",
     "user",
+    "chat",
 ]
 
 MIDDLEWARE = [
@@ -91,9 +93,7 @@ DB_URI = os.getenv("DB_URI")
 # Connect to MongoDB using MongoEngine
 connect(host=DB_URI)
 
-DATABASES = {
-
-}
+DATABASES = {}
 
 AUTHENTICATION_BACKENDS = [
     "user.backends.MongoEngineBackend",

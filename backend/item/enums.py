@@ -3,7 +3,7 @@ from enum import Enum
 class CategoryEnum(str, Enum):
     ACCESSORY = "accessory"
     TOP = "top"
-    BOTTOM = "tottom"
+    BOTTOM = "bottom"
     DRESS = "dress"
     FOOTWEAR = "footwear"
     OUTERWEAR = "outerwear"
