@@ -14,6 +14,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "../../components/ThemeContext";
 import * as ImagePicker from "expo-image-picker";
 import axios from "../../utils/axios";
+import { useRouter } from "expo-router";
 
 interface Item {
   id: string;
@@ -24,7 +25,7 @@ interface Item {
 
 const CATEGORIES: Record<string, string> = {
   ALL: "other",
-  ACCESSORY: "accessory",
+  ACCESSORY: "accessories",
   TOP: "top",
   BOTTOM: "bottom",
   DRESS: "dress",
@@ -45,6 +46,7 @@ const CATEGORIES: Record<string, string> = {
 };
 
 export default function ClosetScreen() {
+  const router = useRouter();
   const { isDarkMode } = useTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("ALL");
@@ -56,7 +58,7 @@ export default function ClosetScreen() {
       setLoading(true);
       let response;
       if (category === "ALL") {
-        response = await axios.get("/items");
+        response = await axios.get("/items/");
       } else {
         response = await axios.get(`/items?category=${CATEGORIES[category]}`);
       }
@@ -85,6 +87,36 @@ export default function ClosetScreen() {
     return true;
   };
 
+  const handleItemPress = (itemId: string) => {
+    router.push(`/item/${itemId}`);
+  };
+
+  const handleImageUpload = async (imageUri: string) => {
+    try {
+      const formData = new FormData();
+      formData.append("image", {
+        uri: imageUri,
+        type: "image/jpeg",
+        name: "photo.jpg",
+      } as any);
+      formData.append("category", CATEGORIES[selectedCategory]);
+
+      const response = await axios.post("/items/upload/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      Alert.alert("Success", "Image uploaded successfully");
+      router.push(`/item/${response.data.id}`);
+    } catch (error) {
+      console.error("Error:", error);
+      Alert.alert("Error", "Failed to process image. Please try again.");
+    } finally {
+      setIsModalVisible(false);
+    }
+  };
+
   const takePicture = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
@@ -95,37 +127,42 @@ export default function ClosetScreen() {
       return;
     }
 
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.8,
-    });
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: "images",
+        allowsEditing: true,
+        quality: 1,
+        allowsMultipleSelection: false,
+      });
 
-    if (!result.canceled) {
-      // Handle the captured image
-      console.log(result.assets[0].uri);
-      // Add your logic to save the image
+      if (!result.canceled) {
+        await handleImageUpload(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      Alert.alert("Error", "Failed to process image. Please try again.");
     }
-    setIsModalVisible(false);
   };
 
   const pickImage = async () => {
     if (!(await requestPermissions())) return;
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.8,
-    });
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: "images",
+        allowsEditing: true,
 
-    if (!result.canceled) {
-      // Handle the selected image
-      console.log(result.assets[0].uri);
-      // Add your logic to save the image
+        quality: 1,
+        allowsMultipleSelection: false,
+      });
+
+      if (!result.canceled) {
+        await handleImageUpload(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      Alert.alert("Error", "Failed to process image. Please try again.");
     }
-    setIsModalVisible(false);
   };
 
   return (
@@ -189,6 +226,7 @@ export default function ClosetScreen() {
                 className={`w-[48%] rounded-lg mb-4 overflow-hidden ${
                   isDarkMode ? "bg-gray-800" : "bg-gray-50"
                 }`}
+                onPress={() => handleItemPress(item.id)}
               >
                 <Image
                   source={{ uri: item.image }}

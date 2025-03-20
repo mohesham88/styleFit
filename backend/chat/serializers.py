@@ -26,6 +26,8 @@ class OutfitSerializer(serializers.Serializer):\
         required=False
     )
 
+    description = serializers.CharField()
+
 
 
     def to_representation(self, instance):
@@ -33,10 +35,12 @@ class OutfitSerializer(serializers.Serializer):\
         print(items)
         user_gender = self.context.get("user_gender")
         print(user_gender)
-        suggestions = instance["suggestions"]
+
+        description = instance.get("description")
 
         buy_suggestions = []
-        if suggestions:
+        if instance.get("suggestions"):
+            suggestions = instance["suggestions"]
             for suggestion in suggestions:
                 search_result = GoogleSearch(generate_serpapi_params(suggestion + " " + "men" , "Egypt"))
                 top_product = search_result.get_dict()["immersive_products"][0]
@@ -47,14 +51,14 @@ class OutfitSerializer(serializers.Serializer):\
                     "price" : top_product["price"],
                     "source" : top_product["source"],
                     "source_logo" : top_product["source_logo"],
+                    "link" : get_product_link(top_product["serpapi_product_api"])
                 }
-
-                get_product_link(top_product["serpapi_product_api"])
 
                 buy_suggestions.append(product)
 
 
         return {
+            "description" : description,
             "items": items,
             "buy_suggestions" : buy_suggestions,
         }

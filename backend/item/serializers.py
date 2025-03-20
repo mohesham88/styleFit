@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import NotFound
 from rest_framework_mongoengine.serializers import DocumentSerializer
 
-
+from utils.utils import serialize_mongo_document
 from .models import Item
 import cloudinary.uploader
 from rest_framework import serializers
@@ -48,11 +48,24 @@ class ItemSerializer(serializers.Serializer):
         return clothing_item
 
 
-class ItemListSerializer(DocumentSerializer):
 
-    class Meta:
-        model = Item
-        fields = '__all__'
+class ItemListSerializer(serializers.Serializer):
+
+    def get_item(self, item_id):
+        """
+        Fetch the item from MongoDB based on the provided item_id.
+        """
+        try:
+            # Convert item_id to ObjectId
+            item = Item.objects.get(id=ObjectId(item_id))
+            return item
+        except Item.DoesNotExist:
+            raise NotFound(detail="Item not found.")
+
+    def to_representation(self, item_id):
+        item_document = self.get_item(item_id)
+        item = serialize_mongo_document(item_document)
+        return item
 
 class UserItemsSerializer(DocumentSerializer):
     class Meta:

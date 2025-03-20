@@ -31,10 +31,16 @@ class ItemUploadView(APIView):
 
 
 from rest_framework_mongoengine import generics as drfme_generics
-class ItemDetailView(drfme_generics.RetrieveAPIView):
-    queryset = Item.objects.all()
-    lookup_field = 'id'
-    serializer_class = ItemListSerializer
+
+class ItemDetailView(APIView):
+    def get(self, request, item_id):
+        try:
+            serializer = ItemListSerializer(item_id)  # Serialize the item
+            return Response(serializer.data)  # Return the serialized data
+        except Item.DoesNotExist:
+            return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserItemsView(drfme_generics.ListAPIView):
     queryset = Item.objects.all()

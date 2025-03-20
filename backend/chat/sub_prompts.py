@@ -4,6 +4,7 @@ SUB_PROMPT_WITH_SUGGESTION = """\n\n\nYou must provide your response in a struct
 ```json
 [
     {
+        "description" : "talk about the outfit and why you chose it doesn't have to be too short",
         "items" : [
             "{ObjectId of the first item}",  # Replace with actual ObjectId from the user’s closet
             "{ObjectId of the second item}", 
@@ -70,14 +71,12 @@ SUB_PROMPT_WITH_NO_SUGGESTION = """\n\n\nYou must provide your response in a str
 ```json
 [
     {
+        "description" : "talk about the outfit and why you chose it doesn't have to be too short",
         "items" : [
             "{ObjectId of the first item}",  # Replace with actual ObjectId from the user’s closet
             "{ObjectId of the second item}", 
             ...
             "{ObjectId of the Nth item}", 
-        ],
-        suggestion : [
-            "leather jacket",
         ]
     }
     ,

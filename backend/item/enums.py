@@ -1,7 +1,6 @@
 from enum import Enum
 
 class CategoryEnum(str, Enum):
-    ACCESSORY = "accessory"
     TOP = "top"
     BOTTOM = "bottom"
     DRESS = "dress"
