@@ -65,8 +65,8 @@ Get personalized style recommendations and outfit suggestions through our AI-pow
 - **Database:** MongoDB
 
 ## Project Structure
-- `backend/` - Django backend service ([Documentation](/backend/README.md))
-- `styleFit/` - Frontend project directory
+- `backend/` - Django backend service ([README](/backend/README.md))
+- `styleFit/` - Frontend project directory ([README](/styleFit/README.md))
   - `assets/` - Application assets and images
   - `app/` - Frontend React application
 
