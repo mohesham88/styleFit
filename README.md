@@ -16,31 +16,28 @@ To simplify wardrobe management and outfit planning through innovative technolog
 
 StyleFit features a modern, intuitive interface designed to make wardrobe management effortless and enjoyable. Here's a glimpse of our application:
 
-### App Splash
+### App Icons & Branding
+![StyleFit Adaptive Icon](styleFit/assets/images/adaptive-icon.png)
+![StyleFit Icon](styleFit/assets/images/icon.png)
 ![StyleFit Splash](styleFit/assets/images/splash.png)
 
 ### Key Features in Action
 
 #### Virtual Closet View
 ![Closet View](styleFit/assets/images/closet-view.png)
-
 Our intuitive closet view helps you organize and visualize your entire wardrobe at a glance.
 
 #### Item Management
 ![Item Details](styleFit/assets/images/item-details.png)
-
 Detailed view of each clothing item with comprehensive information and categorization.
 
 #### Easy Item Upload
 ![Item Upload](styleFit/assets/images/item-upload.png)
-
 Simple and quick process to add new items to your wardrobe.
 
 #### Smart Style Assistant
 ![StyleFit Chat](styleFit/assets/images/stylefit-chat-image.png)
-
-Get personalized style recommendations and outfit suggestions
-through our AI-powered chat interface.
+Get personalized style recommendations and outfit suggestions through our AI-powered chat interface.
 
 ### Key Design Elements
 - **Modern UI Components**: Sleek, responsive design elements that work seamlessly across devices
@@ -65,46 +62,16 @@ through our AI-powered chat interface.
 - Get style recommendations tailored to specific events
 
 ## Tech Stack
+- **Frontend:** React.js
 - **Backend:** Django, Django REST Framework
 - **Database:** MongoDB
-- **Frontend:** React.js
 
-## Installation & Setup
+## Project Structure
+- `backend/` - Django backend service ([Documentation](/backend/README.md))
+- `styleFit/` - Frontend project directory
+  - `assets/` - Application assets and images
+  - `app/` - Frontend React application
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/stylefit.git
-   cd stylefit
-   ```
-2. **Create a virtual environment and install dependencies:**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   pip install -r requirements.txt
-   ```
-3. **Set up MongoDB:**
-   - Install MongoDB and start the service
-   - Configure the database connection in Django settings
-
-4. **Run the development server:**
-   ```bash
-   python manage.py runserver
-   ```
-
-## Example JSON Representation
-```json
-{
-    "Id": "1a2b3c",
-    "Category": "top",
-    "Color": "blue",
-    "Season": "summer",
-    "Type": "casual",
-    "Pattern": "solid",
-    "Material": "cotton",
-    "Description": "Lightweight blue t-shirt for summer",
-    "Image": "path/to/image.jpeg"
-}
-```
 
 ## Future Enhancements
 - AI-powered outfit suggestions based on user preferences
