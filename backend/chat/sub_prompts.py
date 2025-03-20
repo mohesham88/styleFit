@@ -26,6 +26,7 @@ SUB_PROMPT_WITH_SUGGESTION = """\n\n\nYou must provide your response in a struct
 ]
 ```
 Note: Dont recommend more than three outfits
+Only suggest one item
 ### **Strict Rules to Follow**
 1. **Only Use Items from the Context:**  
    - Do not reference or create object IDs unless they are from the user’s closet.
