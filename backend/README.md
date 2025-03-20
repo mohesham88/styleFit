@@ -48,6 +48,3 @@ This is the backend service for StyleFit, built with Django and MongoDB.
 - Django REST Framework
 - MongoDB
 - Python 3.x
-
-## Contributing
-Please read the main project's CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests. 
