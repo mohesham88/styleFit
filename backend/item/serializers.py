@@ -15,7 +15,7 @@ from django.conf import settings
 from .utils import item_generator
 
 
-class ItemSerializer(DocumentSerializer):
+class ItemSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)
     user = serializers.CharField(source="user.id", read_only=True)  # Serialize user as an ID
     category = serializers.CharField(source="category.value", read_only=True)
@@ -28,7 +28,11 @@ class ItemSerializer(DocumentSerializer):
     image = serializers.ImageField(write_only=True)  # Use URLField for the image URL
 
     def create(self, validated_data):
-        user_id = self.context["request"].user_id
+        print(self.context['request'])
+        token = self.context['request'].headers['Authorization'].split()[1]
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        user_id = payload.get("id")
+
         image = validated_data.pop("image")
 
         # Upload image to Cloudinary

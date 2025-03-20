@@ -20,15 +20,13 @@ class ItemUploadView(APIView):
     # permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        print(request) 
         serializer = ItemSerializer(data=request.data, context={'request': request})
-
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 
@@ -42,9 +40,18 @@ class UserItemsView(drfme_generics.ListAPIView):
     queryset = Item.objects.all()
     lookup_field = 'user'
     serializer_class = UserItemsSerializer
+    
     def get_queryset(self):
-        # Filter items that belong to the current user
-        return Item.objects.filter(user=self.request.user)
+        queryset = Item.objects.filter(user=self.request.user)
+        category = self.request.query_params.get('category', None)
+       
+        if category is not None:
+            queryset = queryset.filter(category=category)
+            
+        return queryset
+      
+      
+
 
 
 

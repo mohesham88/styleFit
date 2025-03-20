@@ -1,10 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
-
-import instance from "../../utils/axios";
-
-import axios from "axios";
+import instance, { setAuthToken } from "../../utils/axios";
 
 interface AuthData {
   email?: string;
@@ -24,25 +21,17 @@ const AuthScreen = ({ isSignup = false }) => {
 
   const handleSignIn = async () => {
     try {
-      const res = await axios.get("https://www.google.com");
+      const response = await instance.post("/auth/login/", {
+        username: authData.username,
+        password: authData.password,
+      });
 
-      console.log(res);
-
-      const response = await axios.post(
-        "http://192.168.1.14:8000/auth/login/",
-        {
-          username: authData.username,
-          password: authData.password,
-        }
-      );
-
-      console.log(response);
-
-      if (response.data) {
-        router.replace("/(tabs)/closet");
+      console.log(response.data.token);
+      if (response.data.token) {
+        await setAuthToken(response.data.token);
+        router.replace("/(tabs)/chat");
       }
     } catch (error: any) {
-      console.log(error);
       Alert.alert(
         "Login Failed",
         error.response?.data?.message || "Something went wrong"
@@ -52,15 +41,12 @@ const AuthScreen = ({ isSignup = false }) => {
 
   const handleSignUp = async () => {
     try {
-      const response = await axios.post(
-        "http://192.168.1.14:8000/auth/register/",
-        {
-          email: authData.email,
-          username: authData.username,
-          password: authData.password,
-          gender: authData.gender,
-        }
-      );
+      const response = await instance.post("/auth/register/", {
+        email: authData.email,
+        username: authData.username,
+        password: authData.password,
+        gender: authData.gender,
+      });
 
       if (response.data) {
         Alert.alert("Success", "Account created successfully!", [

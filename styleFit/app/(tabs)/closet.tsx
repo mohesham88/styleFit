@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,22 +7,71 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "../../components/ThemeContext";
 import * as ImagePicker from "expo-image-picker";
+import axios from "../../utils/axios";
 
-const DUMMY_ITEMS = [
-  { id: "1", type: "Shirt", image: "https://via.placeholder.com/150" },
-  { id: "2", type: "Pants", image: "https://via.placeholder.com/150" },
-  { id: "3", type: "Dress", image: "https://via.placeholder.com/150" },
-  { id: "4", type: "Shoes", image: "https://via.placeholder.com/150" },
-];
+interface Item {
+  id: string;
+  type: string;
+  image: string;
+  category: string;
+}
+
+const CATEGORIES: Record<string, string> = {
+  ALL: "other",
+  ACCESSORY: "accessory",
+  TOP: "top",
+  BOTTOM: "bottom",
+  DRESS: "dress",
+  FOOTWEAR: "footwear",
+  OUTERWEAR: "outerwear",
+  SHOES: "shoes",
+  ACCESSORIES: "accessories",
+  BAGS: "bags",
+  JEWELRY: "jewelry",
+  HATS: "hats",
+  SCARVES: "scarves",
+  BELTS: "belts",
+  SOCKS: "socks",
+  UNDERWEAR: "underwear",
+  SWIMWEAR: "swimwear",
+  ACTIVEWEAR: "activewear",
+  SLEEPWEAR: "sleepwear",
+};
 
 export default function ClosetScreen() {
   const { isDarkMode } = useTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [items, setItems] = useState<Item[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchItems = async (category: string) => {
+    try {
+      setLoading(true);
+      let response;
+      if (category === "ALL") {
+        response = await axios.get("/items");
+      } else {
+        response = await axios.get(`/items?category=${CATEGORIES[category]}`);
+      }
+      setItems(response.data);
+    } catch (error) {
+      console.error("Error fetching items:", error);
+      Alert.alert("Error", "Failed to fetch items. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchItems(selectedCategory);
+  }, [selectedCategory]);
 
   const requestPermissions = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -84,71 +133,89 @@ export default function ClosetScreen() {
       className={`flex-1 ${isDarkMode ? "bg-gray-900" : "bg-white"}`}
     >
       <View className="px-4 py-2">
-        <View className="flex-row justify-between items-center mb-4">
-          <Text
-            className={`text-xl font-semibold ${
-              isDarkMode ? "text-gray-100" : "text-gray-800"
-            }`}
-          >
-            My Closet
-          </Text>
-          <TouchableOpacity
-            className="bg-indigo-500 rounded-full p-2"
-            onPress={() => setIsModalVisible(true)}
-          >
-            <MaterialIcons name="add" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
-
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           className="mb-4"
         >
-          {["All", "Tops", "Bottoms", "Dresses", "Shoes", "Accessories"].map(
-            (category) => (
-              <TouchableOpacity
-                key={category}
-                className={`mr-2 px-4 py-2 rounded-full ${
-                  isDarkMode ? "bg-gray-800" : "bg-gray-100"
-                }`}
+          {Object.keys(CATEGORIES).map((category: string) => (
+            <TouchableOpacity
+              key={category}
+              className={`mr-2 px-4 py-2 rounded-full ${
+                selectedCategory === category
+                  ? "bg-indigo-500"
+                  : isDarkMode
+                  ? "bg-gray-800"
+                  : "bg-gray-100"
+              }`}
+              onPress={() => setSelectedCategory(category)}
+            >
+              <Text
+                className={
+                  selectedCategory === category
+                    ? "text-white"
+                    : isDarkMode
+                    ? "text-gray-100"
+                    : "text-gray-800"
+                }
               >
-                <Text
-                  className={isDarkMode ? "text-gray-100" : "text-gray-800"}
-                >
-                  {category}
-                </Text>
-              </TouchableOpacity>
-            )
-          )}
+                {category}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </ScrollView>
       </View>
 
       <ScrollView className="flex-1 px-4">
-        <View className="flex-row flex-wrap justify-between">
-          {DUMMY_ITEMS.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              className={`w-[48%] rounded-lg mb-4 overflow-hidden ${
-                isDarkMode ? "bg-gray-800" : "bg-gray-50"
+        {loading ? (
+          <View className="flex-1 justify-center items-center py-8">
+            <ActivityIndicator size="large" color="#6366F1" />
+          </View>
+        ) : items.length === 0 ? (
+          <View className="flex-1 justify-center items-center py-8">
+            <Text
+              className={`text-lg text-center ${
+                isDarkMode ? "text-gray-300" : "text-gray-600"
               }`}
             >
-              <Image
-                source={{ uri: item.image }}
-                className="w-full h-48"
-                resizeMode="cover"
-              />
-              <View className="p-2">
-                <Text
-                  className={isDarkMode ? "text-gray-100" : "text-gray-800"}
-                >
-                  {item.type}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+              You don't have any items for this category
+            </Text>
+          </View>
+        ) : (
+          <View className="flex-row flex-wrap justify-between">
+            {items.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                className={`w-[48%] rounded-lg mb-4 overflow-hidden ${
+                  isDarkMode ? "bg-gray-800" : "bg-gray-50"
+                }`}
+              >
+                <Image
+                  source={{ uri: item.image }}
+                  className="w-full h-48"
+                  resizeMode="cover"
+                />
+                <View className="p-2">
+                  <Text
+                    className={isDarkMode ? "text-gray-100" : "text-gray-800"}
+                  >
+                    {item.type}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </ScrollView>
+
+      <View className="absolute bottom-4 left-0 right-0 items-center">
+        <TouchableOpacity
+          className="bg-indigo-500 rounded-full p-4 shadow-lg"
+          onPress={() => setIsModalVisible(true)}
+        >
+          <MaterialIcons name="add" size={32} color="white" />
+        </TouchableOpacity>
+      </View>
 
       {/* Image Source Modal */}
       <Modal

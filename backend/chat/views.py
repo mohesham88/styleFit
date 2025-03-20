@@ -14,6 +14,7 @@ from utils.utils import extract_json_from_response
 
 
 
+
 @api_view(["POST"])
 def chat(request):
     # user closet -> mongo db with

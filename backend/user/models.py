@@ -13,7 +13,7 @@ class Profile(Document):
     )  # Store hashed passwords securely
     created_at = DateTimeField(default=now)
     updated_at = DateTimeField(default=now)
-
+    
     def set_password(self, password):
         self.password = bcrypt.hashpw(
             password.encode('utf-8'), bcrypt.gensalt()

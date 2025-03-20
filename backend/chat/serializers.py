@@ -30,7 +30,7 @@ class OutfitSerializer(serializers.Serializer):\
 
     def to_representation(self, instance):
         items = ItemListSerializer(instance["items"], many=True).data
-
+        print(items)
         user_gender = self.context.get("user_gender")
         print(user_gender)
         suggestions = instance["suggestions"]
