@@ -81,7 +81,13 @@ DB_URI = os.getenv("DB_URI")
 # Connect to MongoDB using MongoEngine
 connect(host=DB_URI)
 
-DATABASES = {}
+# DATABASES = {}
+# connect to mongodb database
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.dummy",
+    }
+}
 
 AUTHENTICATION_BACKENDS = [
     "user.backends.MongoEngineBackend",
