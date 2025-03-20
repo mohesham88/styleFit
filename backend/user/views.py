@@ -6,6 +6,7 @@ import jwt
 import datetime
 from django.conf import settings
 from .models import Profile
+from .serializers import ProfileSerializer
 
 
 class RegisterView(APIView):
@@ -51,10 +52,36 @@ class LoginView(APIView):
 
             # PyJWT in newer versions returns bytes instead of string, so decode if needed
             if isinstance(token, bytes):
-                token = token.decode('utf-8')
+                token = token.decode("utf-8")
 
             return Response({"token": token}, status=status.HTTP_200_OK)
 
         return Response(
             {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
         )
+
+
+class ProfileView(APIView):
+    def get(self, request):
+        # Get token from Authorization header
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return Response(
+                {"error": "No valid token provided"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        token = auth_header.split(" ")[1]
+
+        try:
+            # Decode token and get user
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            user = Profile.objects.get(id=payload["id"])
+            request.user = user
+        except (jwt.ExpiredSignatureError, jwt.DecodeError, Profile.DoesNotExist):
+            return Response(
+                {"error": "Invalid or expired token"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        serializer = ProfileSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
