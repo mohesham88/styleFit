@@ -110,6 +110,7 @@ through our AI-powered chat interface.
 - AI-powered outfit suggestions based on user preferences
 - Integration with e-commerce platforms for style inspiration
 - Social sharing of outfit combinations
+- virtual try on
 
 ## Contributing
 Pull requests are welcome! If you'd like to contribute, feel free to fork the repository and submit a PR.
