@@ -1,4 +1,6 @@
-# StyleFit
+# **🚀 StyleFit v1.0.0 is Live! – [Download Now](https://github.com/mohesham88/styleFit/releases) 🚀**  
+
+✅ **[Check out the full release notes](https://github.com/mohesham88/styleFit/releases)** 
 
 StyleFit is a smart outfit suggestion system that helps users organize their wardrobe, categorize clothing items, and receive personalized outfit recommendations based on seasons, occasions, and personal style.
 
