@@ -16,9 +16,7 @@ To simplify wardrobe management and outfit planning through innovative technolog
 
 StyleFit features a modern, intuitive interface designed to make wardrobe management effortless and enjoyable. Here's a glimpse of our application:
 
-### App Icons & Branding
-![StyleFit Adaptive Icon](styleFit/assets/images/adaptive-icon.png)
-![StyleFit Icon](styleFit/assets/images/icon.png)
+### App Splash
 ![StyleFit Splash](styleFit/assets/images/splash.png)
 
 ### Key Features in Action
